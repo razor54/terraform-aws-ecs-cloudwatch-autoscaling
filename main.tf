@@ -12,6 +12,22 @@ module "scale_down_label" {
   context    = module.this.context
 }
 
+module "schedule_action_off_label" {
+  source     = "cloudposse/label/null"
+  version    = "0.24.1"
+  attributes = ["scheduled_action_off"]
+  context    = module.this.context
+
+}
+
+module "schedule_action_on_label" {
+  source     = "cloudposse/label/null"
+  version    = "0.24.1"
+  attributes = ["scheduled_action_on"]
+  context    = module.this.context
+
+}
+
 resource "aws_appautoscaling_target" "default" {
   count              = module.this.enabled ? 1 : 0
   service_namespace  = "ecs"
@@ -56,5 +72,33 @@ resource "aws_appautoscaling_policy" "down" {
       metric_interval_upper_bound = 0
       scaling_adjustment          = var.scale_down_adjustment
     }
+  }
+}
+
+resource "aws_appautoscaling_scheduled_action" "scheduled-auto-scale-off" {
+  count              = module.this.autoscaling_schedule_enabled ? 1 : 0
+  name               = module.schedule_action_off_label.id
+  service_namespace  = aws_appautoscaling_target.default[0].service_namespace
+  resource_id        = aws_appautoscaling_target.default[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.default[0].scalable_dimension
+  schedule           = module.this.autoscaling_schedule_off
+
+  scalable_target_action {
+    min_capacity = var.scheduled_off_min_capacity
+    max_capacity = var.scheduled_off_max_capacity
+  }
+}
+
+resource "aws_appautoscaling_scheduled_action" "scheduled-auto-scale-on" {
+  count              = module.this.autoscaling_schedule_enabled ? 1 : 0
+  name               = module.schedule_action_on_label.id
+  service_namespace  = aws_appautoscaling_target.default[0].service_namespace
+  resource_id        = aws_appautoscaling_target.default[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.default[0].scalable_dimension
+  schedule           = module.this.autoscaling_schedule_off
+
+  scalable_target_action {
+    min_capacity = var.min_capacity
+    max_capacity = var.max_capacity
   }
 }

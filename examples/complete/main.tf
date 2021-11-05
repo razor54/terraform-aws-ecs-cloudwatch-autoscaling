@@ -66,6 +66,7 @@ module "ecs_alb_service_task" {
 module "ecs_cloudwatch_autoscaling" {
   source                = "../../"
   context               = module.this.context
+  autoscaling_schedule_enabled = true
   cluster_name          = aws_ecs_cluster.default.name
   service_name          = module.ecs_alb_service_task.service_name
   min_capacity          = var.min_capacity
@@ -74,4 +75,8 @@ module "ecs_cloudwatch_autoscaling" {
   scale_up_cooldown     = var.scale_up_cooldown
   scale_down_adjustment = var.scale_down_adjustment
   scale_down_cooldown   = var.scale_down_cooldown
+
+  scheduled_off_min_capacity = var.scheduled_off_min_capacity
+  scheduled_off_max_capacity = var.scheduled_off_max_capacity
+
 }

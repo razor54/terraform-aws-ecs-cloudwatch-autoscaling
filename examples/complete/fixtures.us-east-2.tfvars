@@ -89,3 +89,7 @@ scale_up_cooldown = 60
 scale_down_adjustment = -1
 
 scale_down_cooldown = 300
+
+scheduled_off_min_capacity = 0
+
+scheduled_off_max_capacity = 0

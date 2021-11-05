@@ -36,6 +36,7 @@ module "this" {
   id_length_limit     = var.id_length_limit
   label_key_case      = var.label_key_case
   label_value_case    = var.label_value_case
+  autoscaling_schedule_enabled = var.autoscaling_schedule_enabled
 
   context = var.context
 }
@@ -59,6 +60,7 @@ variable "context" {
     id_length_limit     = null
     label_key_case      = null
     label_value_case    = null
+    autoscaling_schedule_enabled = false
   }
   description = <<-EOT
     Single object for setting entire context at once.
@@ -198,5 +200,10 @@ variable "label_value_case" {
     condition     = var.label_value_case == null ? true : contains(["lower", "title", "upper", "none"], var.label_value_case)
     error_message = "Allowed values: `lower`, `title`, `upper`, `none`."
   }
+}
+variable "autoscaling_schedule_enabled" {
+  type        = bool
+  default     = null
+  description = "Set to false to prevent the module from creating autoscaling schedule resources"
 }
 #### End of copy of cloudposse/terraform-null-label/variables.tf

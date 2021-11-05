@@ -43,3 +43,19 @@ variable "scale_down_cooldown" {
   description = "Period (in seconds) to wait between scale down events"
   default     = 300
 }
+
+variable "scheduled_off_min_capacity" {
+
+  type        = number
+  description = "Minimum number of running instances of a Service"
+  default     = 1
+}
+
+variable "scheduled_off_max_capacity" {
+
+  type        = number
+  description = "Maximum number of running instances of a Service"
+  default     = 2
+}
+
+
