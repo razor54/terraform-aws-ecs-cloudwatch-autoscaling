@@ -1,20 +1,20 @@
 module "scale_up_label" {
   source     = "cloudposse/label/null"
-  version    = "0.24.1"
+  version    = "0.25.0"
   attributes = ["up"]
   context    = module.this.context
 }
 
 module "scale_down_label" {
   source     = "cloudposse/label/null"
-  version    = "0.24.1"
+  version    = "0.25.0"
   attributes = ["down"]
   context    = module.this.context
 }
 
 module "schedule_action_off_label" {
   source     = "cloudposse/label/null"
-  version    = "0.24.1"
+  version    = "0.25.0"
   attributes = ["scheduled_action_off"]
   context    = module.this.context
 
@@ -22,7 +22,7 @@ module "schedule_action_off_label" {
 
 module "schedule_action_on_label" {
   source     = "cloudposse/label/null"
-  version    = "0.24.1"
+  version    = "0.25.0"
   attributes = ["scheduled_action_on"]
   context    = module.this.context
 
@@ -76,12 +76,12 @@ resource "aws_appautoscaling_policy" "down" {
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled-auto-scale-off" {
-  count              = module.this.autoscaling_schedule_enabled ? 1 : 0
+  count              = var.autoscaling_schedule_enabled ? 1 : 0
   name               = module.schedule_action_off_label.id
   service_namespace  = aws_appautoscaling_target.default[0].service_namespace
   resource_id        = aws_appautoscaling_target.default[0].resource_id
   scalable_dimension = aws_appautoscaling_target.default[0].scalable_dimension
-  schedule           = module.this.autoscaling_schedule_off
+  schedule           = var.autoscaling_schedule_off
 
   scalable_target_action {
     min_capacity = var.scheduled_off_min_capacity
@@ -90,12 +90,12 @@ resource "aws_appautoscaling_scheduled_action" "scheduled-auto-scale-off" {
 }
 
 resource "aws_appautoscaling_scheduled_action" "scheduled-auto-scale-on" {
-  count              = module.this.autoscaling_schedule_enabled ? 1 : 0
+  count              = var.autoscaling_schedule_enabled ? 1 : 0
   name               = module.schedule_action_on_label.id
   service_namespace  = aws_appautoscaling_target.default[0].service_namespace
   resource_id        = aws_appautoscaling_target.default[0].resource_id
   scalable_dimension = aws_appautoscaling_target.default[0].scalable_dimension
-  schedule           = module.this.autoscaling_schedule_off
+  schedule           = var.autoscaling_schedule_on
 
   scalable_target_action {
     min_capacity = var.min_capacity

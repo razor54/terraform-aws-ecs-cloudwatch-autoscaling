@@ -58,4 +58,23 @@ variable "scheduled_off_max_capacity" {
   default     = 2
 }
 
+variable "autoscaling_schedule_enabled" {
+  type        = bool
+  default     = null
+  description = "Set to false to prevent the module from creating autoscaling schedule resources"
+}
+
+variable "autoscaling_schedule_on" {
+  type        = string
+  default     = null
+  description = "Auto scaling schedule expression for 'on' state"
+}
+
+variable "autoscaling_schedule_off" {
+  type        = string
+  default     = null
+  description = "Auto scaling schedule expression for 'off' state"
+}
+
+
 
